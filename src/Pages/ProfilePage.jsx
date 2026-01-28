@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { supabase } from '../supabaseClient'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom' // Added useNavigate
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { BarChart3, Copy, ExternalLink, Calendar, Smile } from 'lucide-react'
+import { BarChart3, Copy, ExternalLink, Calendar, Smile, LogOut } from 'lucide-react' // Added LogOut icon
 
 const ProfilePage = ({ session }) => {
+  const navigate = useNavigate(); // Hook for redirection
   const containerRef = useRef(null);
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,18 +39,27 @@ const ProfilePage = ({ session }) => {
     });
   }, { scope: containerRef, dependencies: [loading] });
 
-  // --- HELPER: Count Total Votes ---
+  // --- ACTIONS ---
+
+  // 1. Logout Handler
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        console.error('Error logging out:', error);
+    } else {
+        navigate('/'); // Redirect to Home
+    }
+  };
+
   const getVoteCount = (answers) => {
     if (!answers) return 0;
-    // Flat map the array of arrays and sum votes
     return answers.flat().reduce((acc, curr) => acc + (curr.votes || 0), 0);
   };
 
   const copyLink = (e, url) => {
-    e.preventDefault(); // Prevent card click
+    e.preventDefault();
     navigator.clipboard.writeText(`${window.location.origin}${url}`);
     
-    // Quick visual feedback on the button
     gsap.fromTo(e.currentTarget, 
         { scale: 1.2, rotate: 10 }, 
         { scale: 1, rotate: 0, duration: 0.2 }
@@ -74,18 +84,37 @@ const ProfilePage = ({ session }) => {
         <div className="max-w-5xl mx-auto">
             
             {/* Header */}
-            <div className="profile-header flex flex-col sm:flex-row justify-between items-end mb-12 border-b-2 border-base-content/20 pb-6 gap-4">
+            <div className="profile-header flex flex-col sm:flex-row justify-between items-end mb-12 border-b-2 border-base-content/20 pb-6 gap-6">
+                
+                {/* Left: Info */}
                 <div>
                     <h1 className="text-4xl font-black text-primary tracking-tight">MY DASHBOARD</h1>
                     <p className="text-base-content/60 font-bold font-mono mt-2">
                         Welcome back <Smile size={16} className="inline mb-1 mr-1 text-black" /> 
                     </p>
+                    <div className="text-xs font-mono opacity-40 mt-1">{session.user.email}</div>
                 </div>
-                <div className="stats bg-base-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-base-content rounded-xl overflow-visible">
-                    <div className="stat p-4">
-                        <div className="stat-title text-xs font-black uppercase tracking-widest opacity-50">Total Surveys</div>
-                        <div className="stat-value text-2xl font-black">{surveys.length}</div>
+
+                {/* Right: Controls */}
+                <div className="flex items-center gap-4">
+                    
+                    {/* Logout Button */}
+                    <button 
+                        onClick={handleLogout}
+                        className="btn btn-ghost btn-sm border-2 border-transparent hover:border-error hover:bg-error/10 text-error font-bold gap-2 transition-all"
+                    >
+                        <LogOut size={16} strokeWidth={3} />
+                        <span className="hidden sm:inline">Sign Out</span>
+                    </button>
+
+                    {/* Stats Card */}
+                    <div className="stats bg-base-100 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-base-content rounded-xl overflow-visible">
+                        <div className="stat p-4">
+                            <div className="stat-title text-xs font-black uppercase tracking-widest opacity-50">Total Surveys</div>
+                            <div className="stat-value text-2xl font-black">{surveys.length}</div>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
