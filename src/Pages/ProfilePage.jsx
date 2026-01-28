@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { supabase } from '../supabaseClient'
-import { Link, useNavigate } from 'react-router-dom' // Added useNavigate
+import { Link, useNavigate } from 'react-router-dom' 
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import { BarChart3, Copy, ExternalLink, Calendar, Smile, LogOut } from 'lucide-react' // Added LogOut icon
+import { BarChart3, Copy, ExternalLink, Calendar, Smile, LogOut } from 'lucide-react' 
 
 const ProfilePage = ({ session }) => {
-  const navigate = useNavigate(); // Hook for redirection
+  const navigate = useNavigate(); 
   const containerRef = useRef(null);
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(true);

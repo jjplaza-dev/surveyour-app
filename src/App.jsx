@@ -34,12 +34,10 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* Pass session to NavBar so we can show "Logout" or Avatar later */}
       <NavBar session={session} />
       
       <div className="pt-20 min-h-screen bg-base-200">
         <Routes>
-          {/* Pass session to FrontPage so it knows if it should show Login or Maker */}
           <Route path="/" element={<FrontPage session={session} />} />
           
           <Route path="/poll/:id" element={<PollPage />} />

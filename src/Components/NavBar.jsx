@@ -5,7 +5,6 @@ import { LogIn, User } from 'lucide-react'
 
 const NavBar = ({ session }) => {
 
-  // Direct login handler for the Navbar button
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -18,7 +17,6 @@ const NavBar = ({ session }) => {
       
       <div className="container mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         
-        {/* --- LEFT: LOGO --- */}
         <Link 
             to="/" 
             className="group flex items-center gap-3 relative"
@@ -37,35 +35,29 @@ const NavBar = ({ session }) => {
           </span>
         </Link>
 
-        {/* --- RIGHT: PROFILE TAB / LOGIN ACTION --- */}
         <div className="flex items-center">
             
             {session ? (
-               /* STATE: LOGGED IN -> User Profile Tab */
                <Link 
                  to="/profile" 
                  className="group flex items-center gap-3 p-1 pr-4 rounded-full border-2 border-transparent hover:border-black hover:bg-cyan-50 transition-all duration-200"
                >
-                  {/* Avatar Circle with Teal Pop */}
                   <div className="avatar placeholder">
                       <div className="bg-black text-white rounded-full w-10 h-10 border-2 border-black shadow-[3px_3px_0px_0px_#2dd4bf] transition-all flex justify-center items-center">
                           <span className="text-sm font-black">{session.user.email[0].toUpperCase()}</span>
                       </div>
                   </div>
-                  
-                  {/* Text Label */}
+
                   <div className="flex flex-col items-start leading-none">
                       <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">My Space</span>
                       <span className="text-sm font-black text-base-content">Dashboard</span>
                   </div>
                </Link>
             ) : (
-               /* STATE: LOGGED OUT -> Login Button */
                <button 
                  onClick={handleLogin}
                  className="group relative btn btn-sm h-11 px-6 rounded-full bg-black text-white border-2 border-transparent hover:bg-gray-900 hover:border-black transition-all"
                >
-                  {/* Pink Pop Shadow for Login */}
                   <div className="absolute inset-0 rounded-full border-2 border-black shadow-[4px_4px_0px_0px_#f472b6] group-hover:shadow-[2px_2px_0px_0px_#f472b6] group-hover:translate-x-[1px] group-hover:translate-y-[1px] transition-all pointer-events-none"></div>
                   
                   <div className="relative flex items-center gap-2 z-10">

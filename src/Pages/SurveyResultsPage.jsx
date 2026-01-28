@@ -5,18 +5,18 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
 const SurveyResultsPage = () => {
-  const { id } = useParams(); // This is the unique_id (string) from URL
+  const { id } = useParams();
   const containerRef = useRef(null);
   
   const [survey, setSurvey] = useState(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  // --- FETCH & SUBSCRIBE ---
+
   useEffect(() => {
     let channel;
     const fetchAndSubscribe = async () => {
-      // 1. Fetch Survey
+
       const path = `/survey/${id}/results`;
       
       const { data, error } = await supabase
@@ -32,7 +32,6 @@ const SurveyResultsPage = () => {
       }
       setLoading(false);
 
-      // 2. Realtime Updates
       if (data) {
         channel = supabase
           .channel('realtime-survey')
@@ -40,7 +39,6 @@ const SurveyResultsPage = () => {
             { event: 'UPDATE', schema: 'public', table: 'surveys', filter: `id=eq.${data.id}` },
             (payload) => {
               setSurvey(payload.new);
-              // Subtle flash effect on update
               gsap.fromTo('.survey-result-card', { opacity: 0.8 }, { opacity: 1, duration: 0.3 });
             }
           )
@@ -52,7 +50,6 @@ const SurveyResultsPage = () => {
     return () => { if (channel) supabase.removeChannel(channel); };
   }, [id]);
 
-  // --- ANIMATIONS ---
   useGSAP(() => {
     if (loading || !survey) return;
     
@@ -84,8 +81,7 @@ const SurveyResultsPage = () => {
         <div className="absolute top-20 right-10 w-32 h-32 border-4 border-primary/20 rounded-full blur-xl pointer-events-none"></div>
 
         <div className="w-full max-w-3xl mx-auto flex flex-col gap-8 pb-20">
-            
-            {/* --- HEADER --- */}
+                     
             <div className="text-center mb-4">
                 <div className="header-anim badge badge-secondary badge-outline font-black tracking-widest mb-4 p-3 border-2 bg-base-100">
                     SURVEY RESULTS
@@ -93,8 +89,7 @@ const SurveyResultsPage = () => {
                 <h1 className="header-anim text-4xl sm:text-5xl font-black text-base-content mb-2 leading-tight">
                     {survey.title}
                 </h1>
-                
-                {/* Share Button */}
+        
                 <button 
                     onClick={copyLink}
                     className="header-anim btn btn-sm btn-ghost gap-2 opacity-60 hover:opacity-100 mt-2 font-bold"
@@ -103,9 +98,8 @@ const SurveyResultsPage = () => {
                 </button>
             </div>
 
-            {/* --- QUESTIONS LOOP --- */}
             {survey.questions.map((q, qIndex) => {
-                // Get matching answers for this question index
+           
                 const qAnswers = survey.answers[qIndex];
                 const totalVotes = qAnswers.reduce((acc, cur) => acc + (cur.votes || 0), 0);
 
@@ -154,7 +148,6 @@ const SurveyResultsPage = () => {
                 )
             })}
 
-            {/* Footer */}
             <div className="text-center mt-8">
                 <Link to="/" className="btn btn-outline border-2 font-bold hover:bg-base-content hover:text-base-100">
                     ← Back to Home

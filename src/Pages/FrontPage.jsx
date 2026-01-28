@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react'
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { BarChart3, ClipboardList } from 'lucide-react'; // Import Lucide Icons
+import { BarChart3, ClipboardList } from 'lucide-react';
 
-// Components
 import PollMaker from '../Components/PollMaker';
 import SurveyMaker from '../Components/SurveyMaker';
 import Login from './Login';
@@ -12,18 +11,14 @@ import Login from './Login';
 const FrontPage = ({ session }) => {
   const containerRef = useRef(null);
   
-  // State to track which tool is active: 'menu', 'poll', or 'survey'
   const [activeMode, setActiveMode] = useState('menu'); 
 
-  // --- ANIMATIONS ---
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: 'back.out(1.7)', duration: 0.8 } });
 
-    // Header Animation
     tl.from('.main-title', { y: -50, opacity: 0, duration: 1 })
       .from('.subtitle', { y: -20, opacity: 0, duration: 0.6 }, "-=0.6");
-      
-    // If in menu mode, animate the cards in
+
     if (activeMode === 'menu') {
         tl.from('.menu-card', { 
             scale: 0.8, 
@@ -70,17 +65,14 @@ const FrontPage = ({ session }) => {
 
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden relative">
-      
-      {/* Background Pattern */}
+
       <div className='w-full h-full absolute z-[1] opacity-30 top-0 left-0 pointer-events-none' style={{backgroundImage:'url(/pattern1-transparent.png)'}}></div>
       
-      {/* --- LOFI DECORATIONS --- */}
       <div className="absolute top-10 left-10 w-16 h-16 border-4 border-primary rounded-full opacity-20"></div>
       <div className="absolute top-20 right-20 w-8 h-8 bg-secondary rotate-45 opacity-20"></div>
       <div className="absolute bottom-10 left-20 w-24 h-4 bg-base-content opacity-10 rounded-full"></div>
       <div className="absolute bottom-20 right-10 w-12 h-12 border-4 border-base-content opacity-10"></div>
 
-      {/* Main Header */}
       <div className="text-center mb-8 z-10">
         <h1 
             className="main-title text-6xl font-black text-primary tracking-tighter drop-shadow-sm cursor-pointer hover:text-primary-focus transition-colors" 
@@ -93,16 +85,11 @@ const FrontPage = ({ session }) => {
         </p>
       </div>
 
-      {/* --- CONDITIONAL CONTENT --- */}
-      
-      {/* 1. SELECTION MENU */}
       {activeMode === 'menu' && (
         <div className="flex flex-col gap-10 items-center z-10 w-full max-w-4xl ">
             
-            {/* CARDS ROW */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center w-full items-center">
             
-                {/* Poll Card (Compact) */}
                 <div 
                     className="menu-card card w-64 bg-base-100 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] border-2 border-base-content rounded-[1.5rem] cursor-pointer"
                     onClick={(e) => onClickCard(e, 'poll')}
@@ -123,7 +110,6 @@ const FrontPage = ({ session }) => {
                     </div>
                 </div>
 
-                {/* Survey Card (Compact) */}
                 <div 
                     className="menu-card card w-64 bg-base-100 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] border-2 border-base-content rounded-[1.5rem] cursor-pointer"
                     onClick={(e) => onClickCard(e, 'survey')}
@@ -146,7 +132,6 @@ const FrontPage = ({ session }) => {
 
             </div>
 
-            {/* OPTIONAL LOGIN AREA (Moved to bottom) */}
             {!session && (
                 <div className="login-area w-full max-w-sm border-t-2 border-base-content/10 pt-6">
                     <p className="text-center text-xs font-bold uppercase tracking-widest opacity-40 mb-4">Save your work</p>
@@ -159,12 +144,10 @@ const FrontPage = ({ session }) => {
         </div>
       )}
 
-      {/* 2. POLL MAKER COMPONENT */}
       {activeMode === 'poll' && (
         <PollMaker onBack={() => setActiveMode('menu')} session={session}/>
       )}
 
-      {/* 3. SURVEY MAKER COMPONENT */}
       {activeMode === 'survey' && (
         <SurveyMaker onBack={() => setActiveMode('menu')} session={session}/>
       )}

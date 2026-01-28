@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 
-// Register Plugin
 gsap.registerPlugin(ScrollToPlugin);
 
 const SurveyMaker = ({ onBack, session }) => {
@@ -13,22 +12,18 @@ const SurveyMaker = ({ onBack, session }) => {
   const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
 
-  // --- STATE ---
   const [title, setTitle] = useState('');
-  const [isPublic, setIsPublic] = useState(true); // NEW: Visibility State
-  
-  // Initial state: One empty question with two empty options
+  const [isPublic, setIsPublic] = useState(true); 
   const [questions, setQuestions] = useState([
     { id: 1, text: '', options: ['', ''] }
   ]);
 
-  // --- ANIMATIONS ---
+ 
   useGSAP(() => {
-    // Entrance: Slide up
+    
     gsap.from('.survey-container', { 
       y: 100, opacity: 0, duration: 0.8, ease: 'power4.out' 
     });
-    // Stagger items
     gsap.from('.anim-item', { 
         y: 20, opacity: 0, stagger: 0.1, duration: 0.5, delay: 0.2 
     });
@@ -132,7 +127,7 @@ const SurveyMaker = ({ onBack, session }) => {
         answers: initialAnswers,   
         unique_url: uniqueUrl,
         results_url: resultsUrl,
-        is_public: isPublic, // USE STATE
+        is_public: isPublic, 
         owner_id: session?.user?.id
     }]);
 
@@ -156,10 +151,8 @@ const SurveyMaker = ({ onBack, session }) => {
       
       <div className="survey-container flex flex-col gap-8">
         
-        {/* --- HEADER CARD --- */}
         <div className="card w-full bg-base-100 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-2 border-base-content rounded-[2rem] relative overflow-hidden">
-            
-            {/* Back Button */}
+
             <button 
                 onClick={onBack} 
                 className="absolute top-6 left-6 btn btn-circle btn-sm btn-ghost border-2 border-transparent hover:border-base-content hover:bg-transparent transition-all z-10 scale-200"
@@ -170,7 +163,6 @@ const SurveyMaker = ({ onBack, session }) => {
             <div className="card-body p-8 pt-12 text-center">
                 <h2 className="anim-item text-primary font-black text-3xl tracking-tight mb-6 uppercase">Survey Builder</h2>
                 
-                {/* Title Input */}
                 <div className="anim-item form-control w-full mb-6">
                     <input 
                         type="text" 
@@ -181,7 +173,6 @@ const SurveyMaker = ({ onBack, session }) => {
                     />
                 </div>
 
-                {/* NEW: Visibility Toggle Row */}
                 <div className="anim-item flex justify-center w-full">
                     <div className="flex items-center gap-4 bg-base-200/60 px-6 py-3 rounded-xl border-2 border-transparent hover:border-base-content/20 transition-all cursor-pointer" onClick={() => setIsPublic(!isPublic)}>
                         <span className={`text-xs font-black uppercase tracking-widest transition-opacity duration-300 ${!isPublic ? 'text-error opacity-100' : 'opacity-30'}`}>Private</span>
